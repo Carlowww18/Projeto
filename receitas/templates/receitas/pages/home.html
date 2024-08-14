@@ -5,15 +5,13 @@
         
     <main class="main-content-container">
         <div class="main-content main-content-list container">
-            <div class="receita receitas-list-item">
-                <div class="receitas-cover">
-                    <img src="https://placehold.co/1280x720/orange/white" alt="temporario">
-                </div>
-                <h1>oi</h1>
-            </div>
-
+            {% include 'receitas/partials/recipes.html' %}
+            
         </div>
+
     </main>
+
+    {% include 'receitas/partials/footer.html' %}
 
 </body>
 </html>
