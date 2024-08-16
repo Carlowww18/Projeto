@@ -1,26 +1,28 @@
 <div class="receita receitas-list-item">
     <div class="receitas-cover">
-        <img src="https://placehold.co/1280x720/orange/white" alt="temporario">
+        <a href="{% url 'receitas' recipe.id_false %}">
+        <img src="{{ recipe.cover.url}}" alt="temporario">
+        </a>
     </div>
     <div class="receita-title-container">
         <h2 class="receita-title">
-            Lorem ipsum dolor sit amet consectetur 
+            {{ recipe.title }}
         </h2>
     </div>
     
     <div class="recipe-author">
         <span class="recipe-author-item">
             <i class="fas fa-user"></i>
-            Carlos André
+            {{ recipe.author.first_name }}
         </span>
         <span class="recipe-author-item">
             <i class="fas fa-calender-alt"></i>
-            14/08/2024 às 11:21
+            {{ recipe.created_at }}
         </span>
         <span class="recipe-author-item">
             <a href="">
             <i class="fas fa-layer-group"></i>
-            <span>Café da manhã</span>
+            <span>{{ recipe.category.name }}</span>
             </a>
         </span>
 
@@ -45,11 +47,19 @@
         </div>
     </div>
 
+    {% if is_detail_page is not True%}
     <footer class="recipe-footer">
-        <a class="recipe-read-more button button-dark button-full-width" href="/recipes/3/">
+        <a class="recipe-read-more button button-dark button-full-width" href="{% url 'receitas' 2 %}">
             <i class="fas fa-eye"></i>
             <span>ver mais...</span>
         </a>
     </footer>
+    {% endif %}
+
+    {% if is_detail_page is True%}
+    <div class="preparations-steps">
+        {{ recipe.preparation_steps|linebreaksbr  }}
+    </div>
+    {% endif %}
 
 </div>
