@@ -1,12 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
-from . utils.receitas.factory import make_recipe
+from . models import Recipe
 
 def home(request):
-    return render(request, 'receitas/pages/home.html', {'recipes': [make_recipe() for _ in range(3)]},)
+    recipes = Recipe.objects.all().order_by('-id')
+    return render(request, 'receitas/pages/home.html', {'recipes': recipes},)
+
+def category(request, category_id):
+    recipes = Recipe.objects.filter(category__id = category_id).order_by('-id')
+    return render(request, 'receitas/pages/home.html', {'recipes': recipes },)
 
 def receitas(request, id):
-    return render(request, 'receitas/pages/receitas-views.html', {'recipe': make_recipe(),
+    recipe = Recipe.objects.get(id = id)
+    return render(request, 'receitas/pages/receitas-views.html', {'recipe': recipe,
                                                                   'is_detail_page': True,
                                                                   })
+    

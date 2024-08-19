@@ -1,7 +1,8 @@
+{% if recipe.is_published == True %}
 <div class="receita receitas-list-item">
     <div class="receitas-cover">
-        <a href="{% url 'receitas' recipe.id_false %}">
-        <img src="{{ recipe.cover.url}}" alt="temporario">
+        <a href="{% url 'recipes:receitas' recipe.id %}" >
+            <img src="{{ recipe.cover.url}}" alt="temporario">
         </a>
     </div>
     <div class="receita-title-container">
@@ -13,25 +14,29 @@
     <div class="recipe-author">
         <span class="recipe-author-item">
             <i class="fas fa-user"></i>
+            {% if recipe.author.first_name %}
             {{ recipe.author.first_name }}
+            {% else %}
+            {{ recipe.author}}
+            {% endif %}
         </span>
         <span class="recipe-author-item">
             <i class="fas fa-calender-alt"></i>
             {{ recipe.created_at }}
         </span>
         <span class="recipe-author-item">
-            <a href="">
-            <i class="fas fa-layer-group"></i>
-            <span>{{ recipe.category.name }}</span>
+            <a href="{% url 'recipes:category' recipe.category.id %}">
+                <i class="fas fa-layer-group"></i>
+                <span>{{ recipe.category.name }}</span>
             </a>
         </span>
-
+        
     </div>
 
     <div class="recipe-content">
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt, eum molestias nulla, sed architecto aperiam incidunt at modi voluptatem eos, perspiciatis animi? Vitae eveniet nam dolores nihil voluptatum a odio?</p>
     </div>
-
+    
     <div class="recipe-meta-container">
         <div class="recipe-meta recipe-preparation">
             <h3 class="recipe-meta-title"><i class="fas fa-stopwatch"></i> Preparo</h3>
@@ -46,20 +51,21 @@
             </div>
         </div>
     </div>
-
+    
     {% if is_detail_page is not True%}
     <footer class="recipe-footer">
-        <a class="recipe-read-more button button-dark button-full-width" href="{% url 'receitas' 2 %}">
+        <a class="recipe-read-more button button-dark button-full-width" href="">
             <i class="fas fa-eye"></i>
             <span>ver mais...</span>
         </a>
     </footer>
     {% endif %}
-
+    
     {% if is_detail_page is True%}
     <div class="preparations-steps">
         {{ recipe.preparation_steps|linebreaksbr  }}
     </div>
     {% endif %}
-
+    
 </div>
+{% endif %}
