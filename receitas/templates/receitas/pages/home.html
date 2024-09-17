@@ -2,11 +2,11 @@
 
         {% block content %}
 
-        {% include 'receitas/partials/messages.html' %}
+        {% include 'global/partials/messages.html' %}
         
         <div class="main-content main-content-list container">
             {% for recipe in recipes %}
-                {% include 'receitas/partials/recipes.html' %}
+                {% include 'global/partials/recipes.html' %}
             {% endfor %}
         </div>
         {% endblock %}
