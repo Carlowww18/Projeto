@@ -6,6 +6,14 @@
 <div class="main-content container">
     <div class="main-content center container" style="text-align: center;">
         <h2>Login</h2>
+        {% if request.user.is_authenticated %}
+          <p>
+            Your are logged in with <strong>{{ request.user.username }}</strong>
+          </p>
+            <a href="{% url 'authors:logout' %}">Click here to logout</a>
+        {% else %}
+        <p>faça login</p>
+        {% endif %}
       </div>
 
       {% include 'global/partials/form.html' %}
