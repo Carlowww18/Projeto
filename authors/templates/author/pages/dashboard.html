@@ -1,0 +1,16 @@
+{% extends 'global/base.html'%}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="main-content container">
+    <div class="main-content center container" style="text-align: center;">
+        <h2>Dashboard ({{ user }})</h2>
+        {% include 'author/partials/login_message.html' %}
+      </div>
+
+</div>
+    
+{% include 'global/partials/messages.html' %}
+
+{% endblock %}
