@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, AuthorRecipeForm
 from django.http import Http404
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from receitas.models import Recipe
 
 
 def register_view(request):
@@ -57,7 +58,7 @@ def login_create(request):
     else:
         messages.error(request, 'Error to validate form data')
 
-    return redirect(reverse('authors/dashboard'))  
+    return redirect(reverse('authors:dashboard'))  
 
 @login_required(login_url='authors:login', redirect_field_name='next')
 def logout_view(request):
@@ -66,4 +67,72 @@ def logout_view(request):
 
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard(request):
-    return render(request, 'author/pages/dashboard.html')
+    recipes = Recipe.objects.filter(
+        is_published=False,
+        author=request.user
+        )
+    return render(request, 'author/pages/dashboard.html', {'recipes': recipes})
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_recipe_edit(request, id):
+    recipe = Recipe.objects.filter(
+        is_published=False,
+        author=request.user,
+        id=id
+        ).first()
+    
+    if not recipe:
+        raise Http404()
+    form = AuthorRecipeForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=recipe,
+        )
+    
+    if form.is_valid():
+        recipe = form.save(commit=False)
+
+        recipe.author = request.user
+        recipe.preparation_steps_is_html = False
+        recipe.is_published = False
+
+        recipe.save()
+
+        messages.success(request, 'Sua receita foi salva com sucesso')
+        return redirect(reverse('authors:dashboard_recipe_edit', args=(id,)))
+
+    return render(request, 'author/pages/dashboard_recipe.html', {'recipe': recipe,
+                                                                  'form': form})
+
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def recipe_new(request):
+    if request.method == 'POST':
+        form = AuthorRecipeForm(request.POST, request.FILES)
+
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        preparation_time = request.POST.get('preparation_time')
+        servings = request.POST.get('servings')
+
+
+        if title == description:
+            messages.error(request, 'O título e a descrição não podem ser iguais')
+            return redirect(reverse('authors:recipe_new'))  
+        if len(title) <= 3:
+            messages.error(request, 'O título não pode ter menos que 5 caracteres')
+            return redirect(reverse('authors:recipe_new'))  
+        if int(preparation_time) < 0 or int(servings) < 0:
+            messages.error(request, 'Números negativos  não são permitidos')
+            return redirect(reverse('authors:recipe_new'))  
+        else: 
+            if form.is_valid():
+                recipe = form.save(commit=False)
+                recipe.author = request.user
+                recipe.save()
+                messages.success(request, 'Nova receita cadastrada com sucesso')
+                return redirect(reverse('authors:recipe_new'))  
+    else:
+        form = AuthorRecipeForm()
+
+    return render(request, 'author/pages/dashboard_recipe.html', {'form': form})

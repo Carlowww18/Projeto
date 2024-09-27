@@ -6,11 +6,12 @@
 <div class="main-content container">
     <div class="main-content center container" style="text-align: center;">
         <h2>Login</h2>
+      {% if user.authenticated  %}
       {% include 'author/partials/login_message.html' %}
-
       </div>
-
+      {% else %}
       {% include 'global/partials/form.html' %}
+      {% endif %}
 </div>
 
 {% endblock %}

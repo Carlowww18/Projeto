@@ -1,12 +1,28 @@
 {% extends 'global/base.html'%}
 
-{% block title %}Register{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
 <div class="main-content container">
     <div class="main-content center container" style="text-align: center;">
         <h2>Dashboard ({{ user }})</h2>
         {% include 'author/partials/login_message.html' %}
+
+      <div class="authors-dashboard-container">
+        <h3>Your Recipes(não publicados)</h3>
+
+        <ul>
+          {% for recipe in recipes %}
+            <li>
+              <a href="{% url 'authors:dashboard_recipe_edit' recipe.id %}">{{ recipe.title }}</a>
+            </li>
+          {% empty %}
+            <li>
+              <p>Your do not recipes, please create one.</p>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
       </div>
 
 </div>
