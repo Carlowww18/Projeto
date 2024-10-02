@@ -1,7 +1,7 @@
 {% if recipe.is_published == True %}
 <div class="receita receitas-list-item">
     <div class="receitas-cover">
-        <a href="{% url 'recipes:receitas' recipe.id %}" >
+        <a href="{{recipe.get_absolute_url }}" >
             <img src="{{ recipe.cover.url}}" alt="temporario">
         </a>
     </div>
@@ -54,7 +54,7 @@
     
     {% if is_detail_page is not True%}
     <footer class="recipe-footer">
-        <a class="recipe-read-more button button-dark button-full-width" href="{% url 'recipes:receitas' recipe.id%}">
+        <a class="recipe-read-more button button-dark button-full-width" href="{{ recipe.get_absolute_url }}">
             <i class="fas fa-eye"></i>
             <span>ver mais...</span>
         </a>
