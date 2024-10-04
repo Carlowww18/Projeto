@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
             login_required(login_url='authors:login', redirect_field_name='next'),
             name='dispatch'
 )
-class dashboard_recipe(View):
+class dashboardRecipe(View):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -67,9 +67,12 @@ class dashboard_recipe(View):
             login_required(login_url='authors:login', redirect_field_name='next'),
             name='dispatch'
 ) 
-class DashboardRecipeDelete(dashboard_recipe):
+class DashboardRecipeDelete(dashboardRecipe):
     def post(self, *args, **kwargs):
         recipe = self.get_recipe(self.request.POST.get('id'))
-        recipe.delete()
-        messages.success(self.request, 'Deleted successfully')
+        if recipe:
+            recipe.delete()
+            messages.success(self.request, 'Receita deletada com sucesso.')
+        else:
+            messages.error(self.request, 'Receita não encontrada.')
         return redirect(reverse('authors:dashboard'))
