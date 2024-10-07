@@ -41,13 +41,17 @@
         <div class="recipe-meta recipe-preparation">
             <h3 class="recipe-meta-title"><i class="fas fa-stopwatch"></i> Preparo</h3>
             <div class="recipe-meta-text">
-                0 Minutos
+                {% if recipe.preparation_time_unit != None %}
+                {{ recipe.preparation_time}} {{ recipe.preparation_time_unit }}
+                {% endif %}
             </div>
         </div>
         <div class="recipe-meta recipe-servings">
             <h3 class="recipe-meta-title"><i class="fas fa-pizza-slice"></i> Porções</h3>
             <div class="recipe-meta-text">
-                0 Porções
+                {% if recipe.servings_unit != None %}
+                {{ recipe.servings}} {{ recipe.servings_unit }}
+                {% endif %}
             </div>
         </div>
     </div>
