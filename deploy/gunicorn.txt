@@ -1,0 +1,75 @@
+###############################################################################
+# Replace
+# curso_django to the name of the gunicorn file you want
+# Carlos to your user name
+# app_repo to the folder name of your project
+# project to the folder name where you find a file called wsgi.py
+#
+###############################################################################
+# Criando o arquivo curso_django.socket
+sudo nano /etc/systemd/system/curso_django.socket
+
+###############################################################################
+# Conteúdo do arquivo
+[Unit]
+Description=gunicorn blog socket
+
+[Socket]
+ListenStream=/run/curso_django.socket
+
+[Install]
+WantedBy=sockets.target
+
+###############################################################################
+# Criando o arquivo curso_django.service
+sudo nano /etc/systemd/system/curso_django.service
+
+###############################################################################
+# Conteúdo do arquivo
+[Unit]
+Description=Gunicorn daemon (You can change if you want)
+Requires=curso_django.socket
+After=network.target
+
+[Service]
+User=Carlos
+Group=www-data
+Restart=on-failure
+EnvironmentFile=/home/Carlos/app_repo/.env
+WorkingDirectory=/home/Carlos/app_repo
+# --error-logfile --enable-stdio-inheritance --log-level and --capture-output
+# are all for debugging purposes.
+ExecStart=/home/Carlos/app_repo/venv/bin/gunicorn \
+          --error-logfile /home/Carlos/app_repo/gunicorn-error-log \
+          --enable-stdio-inheritance \
+          --log-level "debug" \
+          --capture-output \
+          --access-logfile - \
+          --workers 6 \
+          --bind unix:/run/curso_django.socket \
+          project.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+###############################################################################
+# Ativando
+sudo systemctl start curso_django.socket
+sudo systemctl enable curso_django.socket
+
+# Checando
+sudo systemctl status curso_django.socket
+curl --unix-socket /run/curso_django.socket localhost
+sudo systemctl status curso_django
+
+# Restarting
+sudo systemctl restart curso_django.service
+sudo systemctl restart curso_django.socket
+sudo systemctl restart curso_django
+
+# After changing something
+sudo systemctl daemon-reload
+
+# Debugging
+sudo journalctl -u curso_django.service
+sudo journalctl -u curso_django.socket
