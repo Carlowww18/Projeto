@@ -127,5 +127,3 @@ _local_settings.py
 gunicorn-error-log
 db copy.sqlite3
 static/
-
-!db.sqlite3
