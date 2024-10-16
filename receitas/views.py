@@ -8,6 +8,8 @@ from receitas.utils.pagination import make_pagination
 from . models import Recipe, Category
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
 
 
 PER_PAGE = os.environ.get('PER_PAGE', 6)
@@ -36,6 +38,19 @@ class RecipeListViewBase(ListView):
     
 class RecipeListViewHome(RecipeListViewBase):
     template_name = 'receitas/pages/home.html'
+
+
+class RecipeListViewHomeApi(RecipeListViewBase):
+    template_name = 'receitas/pages/home.html'
+
+    def render_to_response(self, context, **response_kwargs):
+        recipes = self.get_context_data()['recipes']
+        recipes_dict = recipes.object_list.values()
+
+        return JsonResponse(
+            list(recipes_dict),
+            safe=False
+            )
 
 class CategoryListViewBase(ListView):
     model = Recipe
@@ -107,3 +122,22 @@ class RecipeDetail(DetailView):
     model = Recipe
     context_object_name = 'recipe'
     template_name = 'receitas/pages/receitas-views.html'
+
+class RecipeDetailApi(RecipeDetail):
+    def render_to_response(self, context, **response_kwargs):
+        recipe = self.get_context_data()['recipe']
+        recipe_dict = model_to_dict(recipe)
+
+        recipe_dict['created_at'] = str(recipe.created_at)
+
+        if recipe_dict.get('cover'):
+            recipe_dict['cover'] = recipe_dict['cover'].url
+        else:
+            recipe_dict['cover'] = ''
+
+        del recipe_dict['is_published']
+
+        return JsonResponse(
+            recipe_dict,
+            safe=False
+        )

@@ -149,3 +149,8 @@ MESSAGE_TAGS = {
     constants.SUCCESS: 'message-success',
     constants.WARNING: 'message-warning',
 }  
+
+try:
+    from .settings_local import *
+except ImportError:
+    pass
