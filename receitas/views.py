@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-
+from django.db.models.aggregates import Count
 
 PER_PAGE = os.environ.get('PER_PAGE', 6)
 
@@ -141,3 +141,12 @@ class RecipeDetailApi(RecipeDetail):
             recipe_dict,
             safe=False
         )
+    
+def theory(request, *args, **kwargs):
+    recipes = Recipe.objects.get_published()
+    number_of_recipes = recipes.aggregate(number=Count('id'))
+
+    context = {'recipes': recipes,
+               'number_of_recipes': number_of_recipes['number']}
+    
+    return render(request, 'receitas/pages/theory.html', context=context)

@@ -2,14 +2,29 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.text import slugify
+from django.db.models.functions import Concat
+from django.db.models import Q, F
+from django.contrib.contenttypes.fields import GenericRelation
+from tag.models import Tag
 
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self):
         return  f'{self.id} -> {self.name}'
+    
+class RecipeManager(models.Manager):
+    def get_published(self):
+        return self.filter(is_published=True).annotate(
+        author_full_name=Concat(
+            F('author__first_name'), Value(' '),
+            F('author__last_name'), Value(' ('),
+            F('author__username'), Value(')'),
+        )
+    )
 
 class Recipe(models.Model):
+    objects = RecipeManager()
     choices_preparation = (
         ('Minutos', 'Minutos'),
         ('Horas', 'Horas'),
@@ -34,6 +49,7 @@ class Recipe(models.Model):
     cover = models.ImageField(upload_to='receitas/covers/%Y/%m/%d/', blank=True, default='')
     category = models.ForeignKey(Category, on_delete = models.SET_NULL, null = True, blank=True, default=None)
     author = models.ForeignKey(User, on_delete = models.SET_NULL, null = True)
+    tags = GenericRelation(Tag, related_query_name='recipes')
 
     def __str__(self):
         return  f'{self.id} -> {self.title}'

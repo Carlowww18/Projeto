@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'receitas',
     'authors',
+    'tag',
     'debug_toolbar'
 ]
 
@@ -158,6 +159,6 @@ INTERNAL_IPS = [
 ]
 
 try:
-    from .settings_local import *
+    from .local_settings import *
 except ImportError:
     pass
