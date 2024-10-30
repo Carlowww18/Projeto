@@ -7,10 +7,7 @@ from tag.models import Tag
 class CategoryAdmin(admin.ModelAdmin):
     ...
 
-class TagInline(GenericStackedInline):
-    model = Tag
-    fields = ['name']
-    extra = 1
+
 
 admin.site.register(Category, CategoryAdmin)
 
@@ -22,7 +19,4 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ['category', 'author', 'is_published']
     list_editable = ['is_published']
     prepopulated_fields = {'slug': ('title',)}
-
-    inlines = [
-        TagInline
-    ]
+    autocomplete_fields = ['tags']
