@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.text import slugify
 from django.db.models.functions import Concat
-from django.db.models import Q, F
+from django.db.models import Q, F, Value
 from django.contrib.contenttypes.fields import GenericRelation
 from tag.models import Tag
 
