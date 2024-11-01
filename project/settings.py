@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from django.contrib.messages import constants
+from receitas.utils.environments import parse_comma_str_to_list, get_env_variable
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,8 +29,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'INSECURE')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('DEBUG') == '1' else False
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = parse_comma_str_to_list(get_env_variable('ALLOWED_HOSTS'))
+CSRF_TRUSTED_ORIGINS = []
 
 # Application definition
 
