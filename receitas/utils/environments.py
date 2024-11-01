@@ -8,4 +8,5 @@ def parse_comma_str_to_list(comma_str):
         return []
     return [string.strip() for string in comma_str.split(',') if string]
 
-print(parse_comma_str_to_list(get_env_variable('ALLOWED_HOSTS')))
+if __name__ == '__main__':
+    print(parse_comma_str_to_list(get_env_variable('ALLOWED_HOSTS')))
