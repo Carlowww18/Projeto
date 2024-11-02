@@ -165,7 +165,7 @@ class RecipeListViewTag(RecipeListViewBase):
     
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
-        page_title = Tag.objects.filter(slug=self.kwargs.get('slug', ''))
+        page_title = Tag.objects.filter(slug=self.kwargs.get('slug', '')).first()
 
         if not page_title:
             page_title = 'no recipe found'
