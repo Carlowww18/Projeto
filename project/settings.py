@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'INSECURE')
 DEBUG = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS: list[str] = parse_comma_str_to_list(
-    get_env_variable('ALLOWED_HOST')
+    get_env_variable('ALLOWED_HOSTS')
 )
 
 
