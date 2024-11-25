@@ -120,7 +120,7 @@ class SearchListView(SearchListViewBase):
 class RecipeDetail(DetailView):
     model = Recipe
     context_object_name = 'recipe'
-    template_name = 'recipes/pages/recipe-view.html'
+    template_name = 'receitas/pages/receitas-views.html'
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
